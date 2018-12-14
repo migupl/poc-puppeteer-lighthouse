@@ -32,7 +32,7 @@ store:
 
 It first looks on the local machine, then it checks _docker.io_, _registry.fedoraproject.org_ and go on with the registries list.
 
-## Create puppeteer docker image
+## Create nodejs / npm docker image
 
 I am using the tag name **poc-puppeteer-and-lighthouse**.
 
@@ -55,7 +55,9 @@ $ sudo podman run -it poc-puppeteer-and-lighthouse npm -v
 6.4.1
 ```
 
-Puppeteer installation, with local host user privileges, is done with
+## Add puppeteer
+
+[Puppeteer][1] installation, with current user privileges, is done with
 
 ```bash
 $ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse npm i puppeteer
@@ -67,7 +69,16 @@ Running _app/example.js_
 $ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse node example.js
 ```
 
-must be create an _app/example.png_ image 
+must create an _app/example.png_ image 
+
+## Add lighthouse
+
+[Lighthouse][8] installation, with current user privileges, is done with
+
+
+### Notes
+
+As podman requires root privileges to run it's recommended to using current user at container execution.
 
 ### Build errors
 
@@ -110,3 +121,4 @@ To check this you can use a basic Debian Dockerfile like the one in the _./docke
 [5]: https://developers.redhat.com/articles/podman-next-generation-linux-container-tools/?sc_cid=701f2000001CxXhAAK
 [6]: https://podman.io/
 [7]: https://bbs.archlinux.org/viewtopic.php?id=241866
+[8]: https://www.npmjs.com/package/lighthouse

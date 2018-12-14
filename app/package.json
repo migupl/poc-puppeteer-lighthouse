@@ -8,7 +8,7 @@
     },
     "author": "migupl",
     "dependencies": {
-        "puppeteer": "^1.11.0",
-        "puppeteer-core": "1.11.0"
+        "lighthouse": "^3.0.0",
+        "puppeteer": "^1.11.0"
     }
 }
