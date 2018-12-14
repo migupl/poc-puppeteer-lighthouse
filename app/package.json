@@ -1,0 +1,14 @@
+{
+    "name": "playing-with-puppeteer-and-lighthouse",
+    "version": "1.0.0",
+    "description": "Playing with Puppeteer and LightHouse",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "migupl",
+    "dependencies": {
+        "puppeteer": "^1.11.0",
+        "puppeteer-core": "1.11.0"
+    }
+}
