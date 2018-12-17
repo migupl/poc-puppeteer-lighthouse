@@ -1,4 +1,4 @@
-# Playing with [Puppetteer][1] ([API c1.11.0][2]) and [LightHouse][3] running at [Debian][4]
+# Playing with [Puppetteer][1] ([API c1.11.0][2]) and [Lighthouse][3] running at [Debian][4]
 
 ## Using the Open Source Linux tool [podman][5] (The next generation of Linux container tools)
 
@@ -63,18 +63,29 @@ $ sudo podman run -it poc-puppeteer-and-lighthouse npm -v
 $ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse npm i puppeteer
 ```
 
-Running _app/example.js_ 
+Running _app/example-puppeteer.js_ 
 
 ```bash
-$ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse node example.js
+$ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse node example-puppeteer.js
 ```
 
-must create an _app/example.png_ image 
+must create an _app/example-puppeteer.png_ image 
 
 ## Add lighthouse
 
 [Lighthouse][8] installation, with current user privileges, is done with
 
+```bash
+$ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse npm i lighthouse
+```
+
+Running _app/example-lighthouse.js_ 
+
+```bash
+$ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse node example-lighthouse.js | tee -a reports/example-lighthouse.json
+```
+
+must create an _reports/example-lighthouse.json_ json file that it can be uploaded at [Lighthouse Report Viewer][9] 
 
 ### Notes
 
@@ -109,11 +120,6 @@ Use it under your own risk (remember undo it after image build).
 
 To check this you can use a basic Debian Dockerfile like the one in the _./docker-overlay_ folder.
 
-
-
-
-
-
 [1]: https://developers.google.com/web/tools/puppeteer/
 [2]: https://github.com/GoogleChrome/puppeteer/blob/v1.11.0/docs/api.md
 [3]: https://developers.google.com/web/tools/lighthouse/
@@ -122,3 +128,4 @@ To check this you can use a basic Debian Dockerfile like the one in the _./docke
 [6]: https://podman.io/
 [7]: https://bbs.archlinux.org/viewtopic.php?id=241866
 [8]: https://www.npmjs.com/package/lighthouse
+[9]: https://googlechrome.github.io/lighthouse/viewer/
