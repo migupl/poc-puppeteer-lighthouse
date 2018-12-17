@@ -1,3 +1,5 @@
+'use strict';
+
 const puppeteer = require('puppeteer');
 
 (async () => {
@@ -6,15 +8,18 @@ const puppeteer = require('puppeteer');
             // Required for this docker image of Puppeteer
             '--no-sandbox',
             '--disable-setuid-sandbox',
+
             // This will write shared memory files into /tmp instead of /dev/shm,
-            // because Docker’s default for /dev/shm is 64MB
+            // Docker’s default for /dev/shm is 64MB
             '--disable-dev-shm-usage'
         ]
     });
 
     const page = await browser.newPage();
 
-    await page.goto('https://google.com');
+    // wait until page is loaded
+    await page.goto('https://google.com', { waitUntil: 'networkidle0' });
+
     await page.screenshot({path: 'example.png'});
 
     await browser.close();
