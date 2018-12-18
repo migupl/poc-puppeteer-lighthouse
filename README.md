@@ -1,4 +1,12 @@
-# Playing with [Puppetteer][1] ([API c1.11.0][2]) and [Lighthouse][3] running at [Debian][4]
+# Playing with Puppetteer and Lighthouse running at [Debian][4] container
+
+The purpose of this POC is play with 
+
+- [Google Chrome Headless][10] is the Google Chrome browser that can be started without graphical interface to accomplish several tasks (PDF printing, performance, automation...)
+- [Google Lighthouse][3] analyzes web apps and web pages, collecting modern performance metrics and insights on developer best practices ([programatically use][11]).
+- [Google Puppeteer][1] is a tool to automate tasks on a Chrome (headless) browser ([API c1.11.0][2]).
+
+containerized to getting analysis in a json file as console output. 
 
 ## Using the Open Source Linux tool [podman][5] (The next generation of Linux container tools)
 
@@ -129,3 +137,5 @@ To check this you can use a basic Debian Dockerfile like the one in the _./docke
 [7]: https://bbs.archlinux.org/viewtopic.php?id=241866
 [8]: https://www.npmjs.com/package/lighthouse
 [9]: https://googlechrome.github.io/lighthouse/viewer/
+[10]: https://developers.google.com/web/updates/2017/04/headless-chrome
+[11]: https://github.com/GoogleChrome/lighthouse/blob/master/docs/readme.md#using-programmatically
