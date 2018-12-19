@@ -1,4 +1,4 @@
-# Playing with Puppetteer and Lighthouse running at [Debian][4] container
+# Playing with Puppetteer and Lighthouse running at a [Debian container][15] ([it can be tricky][4])
 
 The purpose of this POC is play with 
 
@@ -16,24 +16,33 @@ containerized to getting website performance analysis as console output.
 Because one of the **goals of Lighthouse** is to make sure sites are prioritizing 
 mobile performance the default report will show this approach. The Lighthouse 
 team have intentionally set the emulation settings to mimic a mobile device on a 
-reasonable 3G connection and their thinks are _If your performance numbers are good on mobile, 
-they'll be even better on desktop :) Users will be happy_.
+reasonable 3G connection and it is based on their objective: _"If your performance numbers are 
+good on mobile, they'll be even better on desktop :) Users will be happy"_.
 
-No [device emulation][13] is implemented as parameter option by this reason.
+No [device emulation][13] is implemented as parameter option for this reason.
 
-Using this containerized implementation gets a stable environment to getting good results because:
-- Lighthouse v3.0 is using as new internal auditing engine, codenamed [Lantern][14]. It completes your audits faster, with less variance between runs
+Using this containerized implementation gets a stable environment to get 
+good results because:
+
+- Lighthouse v3.0 is using a new internal auditing engine, codenamed [Lantern][14]. 
+It completes your audits faster, with less variance between runs
 - Chrome Headless gets a clean state every execution.
 
-But it is only that ... own thoughts. No testing was done.
+But it is only that... my own thoughts. No testing was done.
 
-The facility of getting local user privileges for shared folders will be used in every containers execution.
+The facility of getting local user privileges for shared folders will be used in 
+every containers execution.
  
-## Using the Open Source Linux tool [podman][5] (The next generation of Linux container tools)
+## Using the Open Source Linux tool podman ([the next generation of Linux container tools][5])
 
-Running **podman** ([doc][6]) after v1.0 should never require root access (it's his goal) and will be an advantage over docker at future time. Podman's daemon-less architecture will be more flexible and secure than docker architecture that is necessarily running as root. It's promise.
+Running **[podman][6]** after v1.0 should never require root access (it's his goal) 
+and will be an advantage over docker at a future time. Podman's daemon-less 
+architecture will be more flexible and secure than the docker architecture that must be 
+running as root. It's a promise.
 
-As this is a POC we will play with this tool although it's not an advantage now
+As this is a POC we will play with this tool although it has not advantages now
+
+Podman and docker installed versions are
 
 ```bash
 $ sudo podman -v
@@ -42,12 +51,12 @@ $ sudo docker -v
 Docker version 18.09.0-ce, build 4d60db472b
 ```
 
-Podman looks for docker images by the explicit order showed executing 
+Podman looks for docker images in the explicit order showed executing the following command
 
 ```bash
 $ sudo podman info
 host:
-  ...
+...
 registries:
   registries:
   - docker.io
@@ -56,10 +65,11 @@ registries:
   - registry.access.redhat.com
   - registry.centos.org
 store:
-  ...
+...
 ``` 
 
-First looks on the local machine then _docker.io_, _registry.fedoraproject.org_ and go on with the registries list.
+First looks on the local machine then _docker.io_, _registry.fedoraproject.org_ 
+and go on with the registries list.
 
 ## Create nodejs / npm docker image
 
@@ -73,7 +83,8 @@ localhost/poc-puppeteer-and-lighthouse            latest            b2106442811a
 docker.io/library/node                            10-stretch-slim   3a7160ffbbb6   40 hours ago   151 MB
 ```
 
-As you can see the image name is preceded by the registry site. The new **poc-puppeteer-and-lighthouse** image is registered on the local machine. 
+As you can see the image name is preceded by the registry site. The new **poc-puppeteer-and-lighthouse** 
+image is registered in the local machine. 
 
 Nodejs and npm installed versions are
 
@@ -100,7 +111,7 @@ $ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it po
 node example-puppeteer.js
 ```
 
-must create an _app/example-puppeteer.png_ image 
+must create an _app/example.png_ image 
 
 ## Add lighthouse
 
@@ -117,9 +128,10 @@ Running _app/example-lighthouse.js_
 $ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse \
 node example-lighthouse.js | tee -a reports/example-lighthouse.json
 ```
-must create a _reports/example-lighthouse.json_ json file that it can be uploaded at [Lighthouse Report Viewer][9] 
+must create a _reports/example-lighthouse.json_ json file that it can be uploaded 
+at [Lighthouse Report Viewer][9] 
 
-## Using it
+## Using the script
 
 You can execute
 
@@ -133,7 +145,8 @@ to getting the [Lighthouse scoring][12] report as json format.
 Execute 
 
 ```bash
-$ sudo podman run -v $(pwd)/app:/app -rm -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse node get-report -h
+$ sudo podman run -v $(pwd)/app:/app -rm -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse \
+node get-report -h
 Usage: get-report [options] <url>
 
 A JavaScript script to getting Lighthouse audit reports
@@ -155,23 +168,24 @@ Getting json output for desktop emulation
 
 ```bash
 $ sudo podman run -v $(pwd)/app:/app -rm -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse \
-node get-report a-url  --disable-device-emulation --disable-network-throttling --disable-cpu-throttling  | tee reports/a-url.disable-device-emulation.disable-cpu-throttling.disable-network-throttling.json
+node get-report <an-url> --disable-device-emulation --disable-network-throttling --disable-cpu-throttling \
+ | tee reports/<an-url>.desktop.json
 ```
 
 Getting html output for mobile emulation
 
 ```bash
 $ sudo podman run -v $(pwd)/app:/app -rm -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse \
-node get-report a-url -o html | tee reports/a-url.mobile.html
+node get-report <an-url> -o html \
+| tee reports/<an-url>.mobile.html
 ```
-
-That's all. I hope it's helpful.
 
 ### Notes
 
-As podman requires root privileges to run it's recommended to using current user at container execution.
+As podman requires root privileges to run it's recommended to using current user 
+at container execution.
 
-### Build errors
+### Errors at container build
 
 Using as host
 
@@ -180,7 +194,7 @@ $ uname -rsm
 Linux 4.19.8-arch1-1-ARCH x86_64
 ```
 
-can abort the building process with an error error like
+can abort the building process with an error like
 
 ```bash
 ...
@@ -196,9 +210,17 @@ $ echo N | sudo tee /sys/module/overlay/parameters/metacopy
 N
 ```
 
-Use it under your own risk (remember undo it after image build).
+Use it under your own risk (remember undo it after image building).
 
-To check this you can use a basic Debian Dockerfile like the one in the _./docker-overlay_ folder.
+To check this you can use a basic Dockerfile like the one existing in the
+_./docker-overlay_ folder.
+
+
+---
+That's all Folks!. 
+
+Hope it's helpful. Thanks.
+
 
 [1]: https://developers.google.com/web/tools/puppeteer/
 [2]: https://github.com/GoogleChrome/puppeteer/blob/v1.11.0/docs/api.md
@@ -214,3 +236,4 @@ To check this you can use a basic Debian Dockerfile like the one in the _./docke
 [12]: https://developers.google.com/web/tools/lighthouse/v3/scoring
 [13]: https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js
 [14]: https://developers.google.com/web/updates/2018/05/lighthouse3
+[15]: https://github.com/GoogleChrome/puppeteer/blob/master/.ci/node8/Dockerfile.linux
