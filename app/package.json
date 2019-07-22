@@ -1,6 +1,6 @@
 {
     "name": "playing-with-puppeteer-and-lighthouse",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Playing with Puppeteer and LightHouse",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,6 +9,6 @@
     "dependencies": {
         "commander": "^2.19.0",
         "lighthouse": "^3.0.0",
-        "puppeteer": "^1.11.0"
+        "puppeteer": "^1.18.1"
     }
 }

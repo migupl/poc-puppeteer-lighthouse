@@ -90,9 +90,9 @@ Nodejs and npm installed versions are
 
 ```bash
 $ sudo podman run -it poc-puppeteer-and-lighthouse node -v
-v10.14.2
+v10.16.0
 $ sudo podman run -it poc-puppeteer-and-lighthouse npm -v
-6.4.1
+6.9.0
 ```
 
 ## Add puppeteer
@@ -102,6 +102,30 @@ $ sudo podman run -it poc-puppeteer-and-lighthouse npm -v
 ```bash
 $ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse \
 npm i puppeteer
+> puppeteer@1.18.1 install /app/node_modules/puppeteer
+> node install.js
+
+Downloading Chromium r672088 - 112.1 Mb [====================] 100% 0.0s 
+Chromium downloaded to /app/node_modules/puppeteer/.local-chromium/linux-672088
+npm notice created a lockfile as package-lock.json. You should commit this file.
+npm WARN playing-with-puppeteer-and-lighthouse@1.0.0 No repository field.
+npm WARN playing-with-puppeteer-and-lighthouse@1.0.0 No license field.
+
++ puppeteer@1.18.1
+added 1 package from 1 contributor, updated 8 packages and audited 400 packages in 27.183s
+found 1 high severity vulnerability
+  run `npm audit fix` to fix them, or `npm audit` for details
+```
+
+Running the recommendation to vulnerability fixing you gets
+```bash
+$ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse \
+  npm audit fix  
+npm WARN playing-with-puppeteer-and-lighthouse@1.0.1 No repository field.
+npm WARN playing-with-puppeteer-and-lighthouse@1.0.1 No license field.
+
+updated 1 package in 2.551s
+fixed 1 of 1 vulnerability in 400 scanned packages
 ```
 
 Running _app/example-puppeteer.js_ 
