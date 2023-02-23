@@ -1,16 +1,17 @@
 'use strict';
 
-const lighthouse = require('lighthouse');
-const puppeteer = require('puppeteer');
+import lighthouse from 'lighthouse';
+import puppeteer from 'puppeteer';
 
-const {fullConfig} = require('./config/full');
-const {
+import { fullConfig } from './config/full.js';
+
+import {
     url,
     output,
     disableDeviceEmulation,
     disableCpuThrottling,
     disableNetworkThrottling,
-} = require('./config/program-params');
+} from './config/program-params.js';
 
 (async () => {
     const browser = await puppeteer.launch({

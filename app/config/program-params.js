@@ -1,7 +1,7 @@
 'use strict';
 
-let program = require('commander');
-const version = require('../package').version;
+import program from 'commander';
+import version from '../package.json' assert { type: 'json' };
 
 program
     .version(version)
@@ -19,11 +19,17 @@ if (typeof program.args[0] === 'undefined') {
     process.exit(1);
 }
 
-module.exports = {
-    url: program.args[0],
-    output: program.output,
+const url = program.args[0];
+const output = program.output;
+const disableDeviceEmulation = program.disableDeviceEmulation || false;
+const disableCpuThrottling = program.disableCpuThrottling || false;
+const disableNetworkThrottling = program.disableNetworkThrottling || false;
 
-    disableDeviceEmulation: program.disableDeviceEmulation || false,
-    disableCpuThrottling: program.disableCpuThrottling || false,
-    disableNetworkThrottling: program.disableNetworkThrottling || false,
+export {
+    url,
+    output,
+
+    disableDeviceEmulation,
+    disableCpuThrottling,
+    disableNetworkThrottling,
 };

@@ -1,9 +1,9 @@
 'use strict';
 
-const lighthouse = require('lighthouse');
-const puppeteer = require('puppeteer');
+import lighthouse from 'lighthouse';
+import puppeteer from 'puppeteer';
 
-const {fullConfig} = require('./config/full.js');
+import { fullConfig } from './config/full.js';
 
 (async () => {
     const browser = await puppeteer.launch({
