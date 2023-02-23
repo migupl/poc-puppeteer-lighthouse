@@ -40,30 +40,28 @@ and will be an advantage over docker at a future time. Podman's daemon-less
 architecture will be more flexible and secure than the docker architecture that must be 
 running as root. It's a promise.
 
-As this is a POC we will play with this tool although it has not advantages now
-
-Podman and docker installed versions are
+As this is a POC we will play with this tool.
 
 ```bash
-$ sudo podman -v
-podman version 0.12.1.1
-$ sudo docker -v
-Docker version 18.09.0-ce, build 4d60db472b
+$ podman -v
+podman version 4.4.1
 ```
 
 Podman looks for docker images in the explicit order showed executing the following command
 
 ```bash
-$ sudo podman info
+$ podman info
 host:
 ...
 registries:
-  registries:
-  - docker.io
-  - registry.fedoraproject.org
-  - quay.io
-  - registry.access.redhat.com
-  - registry.centos.org
+  docker.io:
+    Blocked: false
+    Insecure: true
+    Location: docker.io
+    MirrorByDigestOnly: false
+    Mirrors: null
+    Prefix: docker.io
+    PullFromMirror: ""
 store:
 ...
 ``` 
@@ -76,11 +74,11 @@ and go on with the registries list.
 I am using the tag name **poc-puppeteer-and-lighthouse**.
 
 ```bash
-$ sudo podman build -t poc-puppeteer-and-lighthouse .
-$ sudo podman images
+$ podman build -t poc-puppeteer-and-lighthouse .
+$ podman images
 REPOSITORY                                        TAG               IMAGE ID       CREATED        SIZE
-localhost/poc-puppeteer-and-lighthouse            latest            b2106442811a   16 hours ago   466 MB
-docker.io/library/node                            10-stretch-slim   3a7160ffbbb6   40 hours ago   151 MB
+localhost/poc-puppeteer-and-lighthouse    latest           1c6e25302643  13 minutes ago  1.17 GB
+docker.io/library/node                    19-slim          d636cb0562fb  15 hours ago    256 MB
 ```
 
 As you can see the image name is preceded by the registry site. The new **poc-puppeteer-and-lighthouse** 
@@ -89,10 +87,10 @@ image is registered in the local machine.
 Nodejs and npm installed versions are
 
 ```bash
-$ sudo podman run -it poc-puppeteer-and-lighthouse node -v
-v10.16.0
-$ sudo podman run -it poc-puppeteer-and-lighthouse npm -v
-6.9.0
+$ podman run -it poc-puppeteer-and-lighthouse node -v
+v19.7.0
+$ podman run -it poc-puppeteer-and-lighthouse npm -v
+9.5.0
 ```
 
 ## Add puppeteer
@@ -100,38 +98,22 @@ $ sudo podman run -it poc-puppeteer-and-lighthouse npm -v
 [Puppeteer][1] installation is done with
 
 ```bash
-$ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse \
+$ podman run -v $(pwd)/app:/app:Z --userns=keep-id -it poc-puppeteer-and-lighthouse \
 npm i puppeteer
-> puppeteer@1.18.1 install /app/node_modules/puppeteer
-> node install.js
+npm WARN deprecated intl-messageformat-parser@1.8.1: We've written a new parser that's 6x faster and is backwards compatible. Please use @formatjs/icu-messageformat-parser
 
-Downloading Chromium r672088 - 112.1 Mb [====================] 100% 0.0s 
-Chromium downloaded to /app/node_modules/puppeteer/.local-chromium/linux-672088
-npm notice created a lockfile as package-lock.json. You should commit this file.
-npm WARN playing-with-puppeteer-and-lighthouse@1.0.0 No repository field.
-npm WARN playing-with-puppeteer-and-lighthouse@1.0.0 No license field.
+added 156 packages, and audited 391 packages in 18s
 
-+ puppeteer@1.18.1
-added 1 package from 1 contributor, updated 8 packages and audited 400 packages in 27.183s
-found 1 high severity vulnerability
-  run `npm audit fix` to fix them, or `npm audit` for details
-```
+26 packages are looking for funding
+  run `npm fund` for details
 
-Running the recommendation to vulnerability fixing you gets
-```bash
-$ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse \
-  npm audit fix  
-npm WARN playing-with-puppeteer-and-lighthouse@1.0.1 No repository field.
-npm WARN playing-with-puppeteer-and-lighthouse@1.0.1 No license field.
-
-updated 1 package in 2.551s
-fixed 1 of 1 vulnerability in 400 scanned packages
+found 0 vulnerabilities
 ```
 
 Running _app/example-puppeteer.js_ 
 
 ```bash
-$ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse \
+$ podman run -v $(pwd)/app:/app:Z --userns=keep-id -it poc-puppeteer-and-lighthouse \
 node example-puppeteer.js
 ```
 
@@ -142,14 +124,14 @@ must create an _app/example.png_ image
 [Lighthouse][8] installation is done with
 
 ```bash
-$ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse \
+$ podman run -v $(pwd)/app:/app:Z --userns=keep-id -it poc-puppeteer-and-lighthouse \
 npm i lighthouse
 ```
 
 Running _app/example-lighthouse.js_ 
 
 ```bash
-$ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse \
+$ podman run -v $(pwd)/app:/app:Z --userns=keep-id -it poc-puppeteer-and-lighthouse \
 node example-lighthouse.js | tee -a reports/example-lighthouse.json
 ```
 must create a _reports/example-lighthouse.json_ json file that it can be uploaded 
@@ -160,7 +142,7 @@ at [Lighthouse Report Viewer][9]
 You can execute
 
 ```bash
-$ sudo podman run -v $(pwd)/app:/app -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse \
+$ podman run -v $(pwd)/app:/app:Z --userns=keep-id -it poc-puppeteer-and-lighthouse \
 node get-report.js an_url
 ```
 
@@ -169,7 +151,7 @@ to getting the [Lighthouse scoring][12] report as json format.
 Execute 
 
 ```bash
-$ sudo podman run -v $(pwd)/app:/app -rm -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse \
+$ podman run -v $(pwd)/app:/app:Z --userns=keep-id -it poc-puppeteer-and-lighthouse \
 node get-report -h
 Usage: get-report [options] <url>
 
@@ -191,7 +173,7 @@ for help.
 Getting json output for desktop emulation
 
 ```bash
-$ sudo podman run -v $(pwd)/app:/app -rm -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse \
+$ podman run -v $(pwd)/app:/app:Z --userns=keep-id -it poc-puppeteer-and-lighthouse \
 node get-report <an-url> --disable-device-emulation --disable-network-throttling --disable-cpu-throttling \
  | tee reports/<an-url>.desktop.json
 ```
@@ -199,7 +181,7 @@ node get-report <an-url> --disable-device-emulation --disable-network-throttling
 Getting html output for mobile emulation
 
 ```bash
-$ sudo podman run -v $(pwd)/app:/app -rm -u $(id -u ${USER}):$(id -g ${USER}) -it poc-puppeteer-and-lighthouse \
+$ podman run -v $(pwd)/app:/app:Z --userns=keep-id -it poc-puppeteer-and-lighthouse \
 node get-report <an-url> -o html \
 | tee reports/<an-url>.mobile.html
 ```
