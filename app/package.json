@@ -8,8 +8,8 @@
     "author": "migupl",
     "dependencies": {
         "commander": "^2.19.0",
-        "lighthouse": "^3.0.0",
-        "puppeteer": "^1.18.1"
+        "lighthouse": "^10.0.1",
+        "puppeteer": "^19.7.2"
     },
     "type": "module"
 }
